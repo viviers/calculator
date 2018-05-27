@@ -1,0 +1,72 @@
+<html>
+
+<body>
+
+<div class="calculator">
+  <div class="entryField"></div>
+  <div class='keyboard'></div>
+  <div class="keyboard2"></div>
+</div>
+
+</body>
+
+
+</html>
+
+<style>
+.entryField {
+
+}
+
+.plus {
+  grid-area: plus;
+}
+
+.keyboard {
+  display: grid;
+  height: 300px;
+  width: 250px;
+  grid-template-rows: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-areas:
+  "9 8 7"
+  "6 5 4"
+  "3 2 1"
+  "0 plus plus";
+}
+
+.keyboard div {
+  padding: 25px;
+  margin: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+</style>
+
+<script>
+
+
+const keyboard = document.querySelector(".keyboard");
+
+//creating the number key divs in the keyboard (in correct order)
+function addKeys() {
+  for (i = 0; i < 11; i++) {
+    const divList = ['plus', 0, 3, 2, 1, 6, 5, 4, 9, 8, 7]
+    const newDiv = document.createElement('div');
+    newDiv.classList.add(divList[i])
+    keyboard.insertBefore(newDiv, keyboard.firstChild);
+    newDiv.innerHTML = `${divList[i]}`;
+  }
+  const plus = document.querySelector(".plus"); /*removing + and adding plus
+  because + is nonfunctional as a class */
+  plus.innerHTML = "+";
+}
+addKeys();
+
+//creating the other addKeys
+
+
+const keys = document.querySelectorAll(".keyboard div");
+
+
+</script>
