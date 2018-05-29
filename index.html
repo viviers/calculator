@@ -1,12 +1,197 @@
 <html>
 
+<head>
+  <title>Calculator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/4.4.0/math.js" type="text/javascript"></script>
+</head>
+
 <body>
 
 <div class="calculator">
-  <div class="entryField"></div>
-  <div class='keyboard'></div>
-  <div class="keyboard2"></div>
+  <div class="entryField"><span class="entry">Press Enter to Calculate</span><span class="blinker"></span></div>
+    <div class='keyboard'></div>
+    <div class="keyboard2">
+        <div class="power">^</div>
+        <div class="divide">/</div>
+        <div class="multiply">*</div>
+        <div class="decimal">.</div>
+      </div>
 </div>
+
+<h1 style="margin-top:50px">Javascript and CSS code used</h1>
+<xmp>
+  <style>
+  .calculator {
+    display: grid;
+    height: 450px;
+    width: 300px;
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-areas:
+    "entryField entryField entryField entryField"
+    "keyboard keyboard keyboard keyboard2"
+    "keyboard keyboard keyboard keyboard2"
+    "keyboard keyboard keyboard keyboard2";
+    font-family: arial;
+    border-radius: 10px;
+    background: #2c3e50;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+
+  .entryField {
+    grid-area: entryField;
+    background: white;
+    border-radius: 10px;
+    margin: 10px 10px 20px 10px;
+    padding: 10px;
+    font-family: consolas;
+  }
+
+
+  /* i did not write this animation code */
+  .blinker {
+    animation-name: blinker;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(1,0,0,1);
+    animation-duration: 1s;
+    display: inline-block;
+    width: 1px;
+    height: 17px;
+    margin-left: 1px;
+    background: black;
+  }
+
+  @keyframes blinker {
+    from { opacity: 1.0; } to { opacity: 0.0; }
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .plus {
+    grid-area: plus;
+  }
+
+  .keyboard {
+    grid-area: keyboard;
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas:
+    "9 8 7"
+    "6 5 4"
+    "3 2 1"
+    "0 plus plus";
+  }
+
+  .keyboard2 {
+    grid-area: keyboard2;
+    display: grid;
+  }
+
+
+  .keyboard div, .keyboard2 div {
+    padding: 25px;
+    margin: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    text-align: center;
+    font-size: 20px;
+    border-radius: 15px;
+    background: white;
+    color: gray;
+  }
+
+  .divActive {
+    transform: translateY(2px);
+  }
+
+
+  </style>
+
+  <script type="text/javascript">
+
+
+  const keyboard = document.querySelector(".keyboard");
+
+  //creating the number key divs in the keyboard (in correct order)
+  function addKeys() {
+    for (i = 0; i < 11; i++) {
+      const divList = ['plus', 0, 3, 2, 1, 6, 5, 4, 9, 8, 7]
+      const newDiv = document.createElement('div');
+      newDiv.classList.add(divList[i])
+      keyboard.insertBefore(newDiv, keyboard.firstChild);
+      newDiv.innerHTML = `${divList[i]}`;
+    }
+    const plus = document.querySelector(".plus"); /*removing + and adding plus
+    because + is nonfunctional as a class */
+    plus.innerHTML = "+";
+  }
+  addKeys();
+
+  const entry = document.querySelector(".entry");
+
+  //Translating clicking to input
+  const keys = document.querySelectorAll(".keyboard div");
+  keys.forEach(key => key.addEventListener("click", () => {
+    if ((entry.textContent).includes("Calculate")) {
+      entry.innerHTML = "";
+    }
+    entry.innerHTML = entry.innerHTML + key.innerHTML;
+  }));
+
+  const keys2 = document.querySelectorAll(".keyboard2 div");
+  keys2.forEach(key => key.addEventListener("click", () => {
+    if ((entry.textContent).includes("Calculate")) {
+      entry.innerHTML = "";
+    }
+    entry.innerHTML = entry.innerHTML + key.innerHTML;
+  }));
+
+  //adding temp class
+
+  keys.forEach(key => key.addEventListener('pointerdown', () => key.classList.add('divActive')));
+  keys.forEach(key => {
+    ['pointerup', 'pointerleave'].forEach(function(e) {
+    key.addEventListener(e, () => key.classList.remove('divActive'))
+  })
+  });
+
+  keys2.forEach(key => key.addEventListener('pointerdown', () => key.classList.add('divActive')));
+  keys2.forEach(key => {
+    ['pointerup', 'pointerleave'].forEach(function(e) {
+    key.addEventListener(e, () => key.classList.remove('divActive'))
+  })
+  });
+
+
+
+
+  //delete key functon
+  window.addEventListener("keydown", e => {
+    if (e.which == 8) {
+      entry.innerHTML = "";
+    }
+  });
+
+
+  //run solve function on enter
+  window.addEventListener("keydown", e => {
+    if (e.which == 13) {
+      entry.innerHTML = math.eval(entry.innerHTML);
+    }
+  });
+
+
+  </script>
+
+</xmp>
 
 </body>
 
@@ -14,8 +199,58 @@
 </html>
 
 <style>
-.entryField {
+.calculator {
+  display: grid;
+  height: 450px;
+  width: 300px;
+  grid-template-rows: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-areas:
+  "entryField entryField entryField entryField"
+  "keyboard keyboard keyboard keyboard2"
+  "keyboard keyboard keyboard keyboard2"
+  "keyboard keyboard keyboard keyboard2";
+  font-family: arial;
+  border-radius: 10px;
+  background: #2c3e50;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 
+
+.entryField {
+  grid-area: entryField;
+  background: white;
+  border-radius: 10px;
+  margin: 10px 10px 20px 10px;
+  padding: 10px;
+  font-family: consolas;
+}
+
+
+/* i did not write this animation code */
+.blinker {
+  animation-name: blinker;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(1,0,0,1);
+  animation-duration: 1s;
+  display: inline-block;
+  width: 1px;
+  height: 17px;
+  margin-left: 1px;
+  background: black;
+}
+
+@keyframes blinker {
+  from { opacity: 1.0; } to { opacity: 0.0; }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .plus {
@@ -23,9 +258,8 @@
 }
 
 .keyboard {
+  grid-area: keyboard;
   display: grid;
-  height: 300px;
-  width: 250px;
   grid-template-rows: repeat(4, 1fr);
   grid-template-columns: repeat(3, 1fr);
   grid-template-areas:
@@ -35,15 +269,31 @@
   "0 plus plus";
 }
 
-.keyboard div {
+.keyboard2 {
+  grid-area: keyboard2;
+  display: grid;
+}
+
+
+.keyboard div, .keyboard2 div {
   padding: 25px;
   margin: 5px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  text-align: center;
+  font-size: 20px;
+  border-radius: 15px;
+  background: white;
+  color: gray;
 }
+
+.divActive {
+  transform: translateY(2px);
+}
+
 
 </style>
 
-<script>
+<script type="text/javascript">
 
 
 const keyboard = document.querySelector(".keyboard");
@@ -63,10 +313,58 @@ function addKeys() {
 }
 addKeys();
 
-//creating the other addKeys
+const entry = document.querySelector(".entry");
 
-
+//Translating clicking to input
 const keys = document.querySelectorAll(".keyboard div");
+keys.forEach(key => key.addEventListener("click", () => {
+  if ((entry.textContent).includes("Calculate")) {
+    entry.innerHTML = "";
+  }
+  entry.innerHTML = entry.innerHTML + key.innerHTML;
+}));
+
+const keys2 = document.querySelectorAll(".keyboard2 div");
+keys2.forEach(key => key.addEventListener("click", () => {
+  if ((entry.textContent).includes("Calculate")) {
+    entry.innerHTML = "";
+  }
+  entry.innerHTML = entry.innerHTML + key.innerHTML;
+}));
+
+//adding temp class
+
+keys.forEach(key => key.addEventListener('pointerdown', () => key.classList.add('divActive')));
+keys.forEach(key => {
+  ['pointerup', 'pointerleave'].forEach(function(e) {
+  key.addEventListener(e, () => key.classList.remove('divActive'))
+})
+});
+
+keys2.forEach(key => key.addEventListener('pointerdown', () => key.classList.add('divActive')));
+keys2.forEach(key => {
+  ['pointerup', 'pointerleave'].forEach(function(e) {
+  key.addEventListener(e, () => key.classList.remove('divActive'))
+})
+});
+
+
+
+
+//delete key functon
+window.addEventListener("keydown", e => {
+  if (e.which == 8) {
+    entry.innerHTML = "";
+  }
+});
+
+
+//run solve function on enter
+window.addEventListener("keydown", e => {
+  if (e.which == 13) {
+    entry.innerHTML = math.eval(entry.innerHTML);
+  }
+});
 
 
 </script>
